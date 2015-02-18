@@ -6,12 +6,13 @@ end
 class ComputerPlayer < Player
 	attr_reader
 	def initialize()
-		@name = "Master Computer"
+		@name = "Computer"
 	end
 end
 
 class Code 
 	attr_accessor :code
+	attr_reader :color_choices
 	def initialize(is_computer)
 		@code = []
 		@is_computer = is_computer
@@ -62,7 +63,7 @@ class View
 		puts "Welcome to Mastermind!"
 		puts "This game involves a code breaker and a code setter."
 		puts "The code setter chooses 4 colors in a specific order, and the"
-		puts "code breaker has 12 attempts to guess the correct code. If the"
+		puts "code breaker has 10 attempts to guess the correct code. If the"
 		puts "code breaker is unable to solve the code, the code setter wins." 
 		puts "Likewise, if the code breaker solves the code, that person wins."	
 
@@ -105,7 +106,7 @@ class GameEngine
 	end
 
 	def play
-		until @guesses > 12 || code_broken?
+		until @guesses > 10 || code_broken?
 			ask_for_guess 
 			@guesses += 1
 
@@ -118,7 +119,7 @@ class GameEngine
 				@view.show_board(@all_guesses)
 			end
 		end
-		end_game
+		end_game 
 	end
 
 	def create_feed_back_string 
@@ -179,8 +180,24 @@ class GameEngine
 		puts
 		puts "    [red, orange, yellow, green, blue, black, white, brown]"
 		puts
+		collect_guess
+		while !verify_guess
+			puts "Error: You must choose 4 valid colors from the list."
+			collect_guess
+		end
+	end
+
+	def collect_guess 
 		puts "Separate each color by a space:"
 		@current_guess = gets.chomp.downcase.split(" ")
+	end
+
+	def verify_guess 
+		@current_guess.each do |color|
+			if !@code.color_choices.include?(color) || @current_guess.length != 4
+				return false
+			end
+		end
 	end
 
 	def code_broken?
@@ -188,6 +205,7 @@ class GameEngine
 	end
 
 	def end_game 
+		puts "The code was #{@code.code.inspect}"
 		puts "Game over!"
 	end
 end
