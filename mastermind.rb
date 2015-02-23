@@ -3,13 +3,6 @@ class Player
 	def initialize; end
 end
 
-class ComputerPlayer < Player
-	attr_reader
-	def initialize()
-		@name = "Computer"
-	end
-end
-
 class Code 
 	attr_accessor :code
 	attr_reader :color_choices
@@ -34,7 +27,6 @@ class Code
 	private
 
 	def player_choice
-		@code = %w(red yellow blue green)
 	end
 
 	def computer_choice
